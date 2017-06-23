@@ -64,12 +64,16 @@ ws.on('request', function (req) {
         }
         if (json.t === 'c' && typeof json.c == 'string') {
             let c = json.c.slice(0, 2);
-            if (c.length && json.x && json.y) {
-                angle += 0.3 + Math.random() * 0.3;
-                let radius = 60 + Math.random() * 20;
+            if (c.length && typeof json.x == 'number' && typeof json.y == 'number') {
+                const PI = 3.1415926535;
+                angle += 0.2 + Math.random() * 0.1;
+                if (angle > 2*PI)
+                    angle -= 2*PI;
+                let radius = 100 + Math.random() * 10;
                 let x = Math.round(json.x - Math.cos(angle) * radius);
                 let y = Math.round(json.y - Math.sin(angle) * radius * 1.35);
-                broadcast({t: 'c', c: c, x: x, y: y, k: color});
+                let z = Math.round(angle / 3.141592 / 2 * 360 - 90);
+                broadcast({t: 'c', c: c, x: x, y: y, z: z, k: color});
                 return;
             }
         }

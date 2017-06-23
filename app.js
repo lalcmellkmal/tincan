@@ -29,6 +29,10 @@ window.wsMessage = function (e) {
         span.style.left = (msg.x / 1000 * window.innerWidth) + 'px';
         span.style.top = (msg.y / 1000 * window.innerHeight) + 'px';
         span.style.color = msg.k;
+        var rot = 'rotate(' + msg.z + 'deg)';
+        span.style.transform = rot;
+        span.style.WebkitTransform = rot;
+        span.style.msTransform = rot;
         document.body.appendChild(span);
         setTimeout(function () { span.remove(); }, 2000);
     } else {
