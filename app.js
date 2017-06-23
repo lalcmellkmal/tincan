@@ -1,3 +1,4 @@
+var endpoint = 'ws://localhost:8000/';
 var h1 = document.getElementsByTagName('h1')[0];
 if (typeof window.reconnector == 'undefined') window.reconnector = 0;
 var mouseX = 500, mouseY = 500;
@@ -44,7 +45,7 @@ window.wsOpen = function (e) {
 
 window.connect = function () {
     if (window.ws) { try { window.ws.close(); } catch (e) {} }
-    window.ws = new WebSocket('ws://localhost:8000', 'tincan');
+    window.ws = new WebSocket(endpoint, 'tincan');
     ws.onclose = function (e) { window.wsClose(e) };
     ws.onerror = function (e) { window.wsError(e) };
     ws.onmessage = function (e) { window.wsMessage(e); };

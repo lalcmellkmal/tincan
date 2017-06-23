@@ -24,6 +24,9 @@ let server = require('http').createServer(function (req, resp) {
 });
 
 let port = 8000;
+if (typeof port == 'string') {
+    try { fs.unlinkSync(port) } catch (e) {}
+}
 server.listen(port, function () {
     console.log('Listening on :' + port);
 });
@@ -34,7 +37,7 @@ let ws = new (require('websocket').server)({
 });
 
 ws.on('request', function (req) {
-    if (!/^https?:\/\/(localhost|doushio.com):(80|443|8000)$/.test(req.origin)) {
+    if (!/^https?:\/\/(localhost|doushio.com)(:80|:443|:8000)?$/.test(req.origin)) {
         req.reject();
         console.warn('rejected WS from ' + JSON.stringify(req.origin));
         return;
