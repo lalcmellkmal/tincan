@@ -28,6 +28,7 @@ window.wsMessage = function (e) {
         span.innerText = msg.c;
         span.style.left = (msg.x / 1000 * window.innerWidth) + 'px';
         span.style.top = (msg.y / 1000 * window.innerHeight) + 'px';
+        span.style.color = msg.k;
         document.body.appendChild(span);
         setTimeout(function () { span.remove(); }, 2000);
     } else {

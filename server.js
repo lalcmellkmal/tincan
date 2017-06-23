@@ -47,9 +47,11 @@ ws.on('request', function (req) {
     let ip = sock.remoteAddress;
     let id = ++CLIENT_CTR;
     CLIENTS[id] = {sock: sock};
-    console.log('client #' + id + ' from ' + ip);
 
     var angle = 0;
+    var colorKey = COLOR_KEYS[Math.floor(Math.random() * COLOR_KEYS.length)];
+    var color = COLORS[colorKey];
+    console.log('client #' + id + ' from ' + ip + ' (' + colorKey + ')');
 
     sock.on('message', function (msg) {
         if (msg.type != 'utf8') return;
@@ -67,7 +69,7 @@ ws.on('request', function (req) {
                 let radius = 60 + Math.random() * 20;
                 let x = Math.round(json.x - Math.cos(angle) * radius);
                 let y = Math.round(json.y - Math.sin(angle) * radius * 1.35);
-                broadcast({t: 'c', c: c, x: x, y: y});
+                broadcast({t: 'c', c: c, x: x, y: y, k: color});
                 return;
             }
         }
@@ -87,3 +89,20 @@ function broadcast(msg) {
         CLIENTS[id].sock.send(msg);
     }
 }
+
+var COLORS = {
+    ming: '#ee6e7b',
+    turquoise: '#1abc9c',
+    emerald: '#2ecc71',
+    belize: '#2980b9',
+    wisteria: '#8e44ad',
+    midnightBlue: '#2c3e50',
+    burntOrange: '#d35400',
+    pomegranate: '#c0392b',
+    greenPostIt: '#01e6c0',
+    cabaret: '#d2527f',
+    copper: '#c47d31',
+    cyan: '#20e6fa',
+    tan: '#c5b08e',
+};
+var COLOR_KEYS = Object.keys(COLORS);
