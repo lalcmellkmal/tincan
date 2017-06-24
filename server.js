@@ -72,7 +72,7 @@ ws.on('request', function (req) {
                 let radius = 100 + Math.random() * 10;
                 let x = Math.round(json.x - Math.cos(angle) * radius);
                 let y = Math.round(json.y - Math.sin(angle) * radius * 1.35);
-                let z = Math.round(angle / 3.141592 / 2 * 360 - 90);
+                let z = Math.round(angle / PI * 180 - 90);
                 broadcast({t: 'c', c: c, x: x, y: y, z: z, k: color});
                 return;
             }
