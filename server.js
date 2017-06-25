@@ -48,6 +48,7 @@ ws.on('request', function (req) {
     let id = ++CLIENT_CTR;
     CLIENTS[id] = {sock: sock};
 
+    const PI = 3.1415926535;
     var angle = 0;
     var colorKey = COLOR_KEYS[Math.floor(Math.random() * COLOR_KEYS.length)];
     var color = COLORS[colorKey];
@@ -63,9 +64,15 @@ ws.on('request', function (req) {
             return;
         }
         if (json.t === 'c' && typeof json.c == 'string') {
-            let c = json.c.slice(0, 2);
-            if (c.length && typeof json.x == 'number' && typeof json.y == 'number') {
-                const PI = 3.1415926535;
+            var c = json.c;
+            if (c === 'Backspace') {
+                angle -= 0.25;
+                return;
+            } else if (c === 'Enter') {
+                angle += PI / 2;
+                return;
+            } else if (c.length && typeof json.x == 'number' && typeof json.y == 'number') {
+                c = c.slice(0, 2);
                 angle += 0.2 + Math.random() * 0.1;
                 if (angle > 2*PI)
                     angle -= 2*PI;
