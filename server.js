@@ -3,6 +3,7 @@ let join = require('path').join;
 
 let CLIENT_CTR = 0;
 let CLIENTS = {};
+let CHAR_CTR = 0; // wraps at 9999
 
 let server = require('http').createServer(function (req, resp) {
     if (req.url == '/') {
@@ -52,6 +53,8 @@ ws.on('request', function (req) {
     var angle = 0;
     var colorKey = COLOR_KEYS[Math.floor(Math.random() * COLOR_KEYS.length)];
     var color = COLORS[colorKey];
+    let prevIds = new Array(25);
+    var cursor = 0;
     console.log('client #' + id + ' from ' + ip + ' (' + colorKey + ')');
 
     sock.on('message', function (msg) {
@@ -66,12 +69,26 @@ ws.on('request', function (req) {
         if (json.t === 'c' && typeof json.c == 'string') {
             var c = json.c;
             if (c === 'Backspace') {
-                angle -= 0.25;
+                var pos = cursor - 1;
+                if (pos < 0) pos = 24;
+                let id = prevIds[pos];
+                if (id) {
+                    prevIds[pos] = 0;
+                    cursor = pos;
+                    angle -= 0.25;
+                    broadcast({t: 'd', i: id});
+                }
                 return;
             } else if (c === 'Enter') {
                 angle += PI / 2;
                 return;
             } else if (c.length && typeof json.x == 'number' && typeof json.y == 'number') {
+                // remember this character
+                let id = ++CHAR_CTR;
+                if (CHAR_CTR >= 9999) CHAR_CTR = 0;
+                prevIds[cursor++] = id;
+                if (cursor >= 25) cursor = 0;
+
                 c = c.slice(0, 2);
                 angle += 0.2 + Math.random() * 0.1;
                 if (angle > 2*PI)
@@ -80,7 +97,7 @@ ws.on('request', function (req) {
                 let x = Math.round(json.x - Math.cos(angle) * radius);
                 let y = Math.round(json.y - Math.sin(angle) * radius * 1.35);
                 let z = Math.round(angle / PI * 180 - 90);
-                broadcast({t: 'c', c: c, x: x, y: y, z: z, k: color});
+                broadcast({t: 'c', c: c, i: id, x: x, y: y, z: z, k: color});
                 return;
             }
         }

@@ -24,6 +24,7 @@ window.wsMessage = function (e) {
     var msg = JSON.parse(e.data);
     if (msg.t == 'c') {
         var span = document.createElement('span');
+        span.id = msg.i;
         span.className = 'c';
         span.innerText = msg.c;
         span.style.left = (msg.x / 1000 * window.innerWidth) + 'px';
@@ -35,6 +36,9 @@ window.wsMessage = function (e) {
         span.style.msTransform = rot;
         document.body.appendChild(span);
         setTimeout(function () { span.remove(); }, 2000);
+    } else if (msg.t == 'd') {
+        let el = document.getElementById(msg.i);
+        el && el.remove();
     } else {
         console.warn('>', msg);
     }
