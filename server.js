@@ -81,6 +81,7 @@ ws.on('request', function (req) {
                 return;
             } else if (c === 'Enter') {
                 angle += PI / 2;
+                for (let i = 0; i < 25; i++) prevIds[i] = 0;
                 return;
             } else if (c.length && typeof json.x == 'number' && typeof json.y == 'number') {
                 // remember this character
